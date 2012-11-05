@@ -1,25 +1,39 @@
-## spy data processing
+## agg data processing
 
+library("quantmod"
+        
 getSymbols("AGG",src="yahoo")
 barChart(AGG)
 
-
 agg.returns = periodReturn(AGG,period='daily')
-dim(agg.returns)
+ndays = dim(agg.returns)[1]
 
-ndays = dim(spy_returns)[1]
-day.returns = data.frame(agg.returns[-1,])
-dim(day.returns)
+today.returns = agg.returns
+today.returns[1,] = NA
+today.returns = subset(today.returns, !is.na(today.returns))
 
-prev.returns =  agg.returns[1:ndays,]
-dim(prev.returns)
+prev.returns = agg.returns
+prev.returns[ndays,] = NA
+prev.returns = subset(prev.returns, !is.na(prev.returns))
 
-day.returns$prev.returns = prev.returns
-day.returns[1:10,]
-agg.returns[1:10,]
+corr.returns = data.frame(today.returns)
+corr.returns$prev.returns = prev.returns
 
-day.returns$daily_bin =cut(day.returns$daily.returns, breaks = c(-1.0,-0.04,-0.02, 0.0, 0.02, 0.04, 1.0))
-day.returns$prev_bin  =cut(day.returns$prev.returns,  breaks = c(-1.0,-0.04,-0.02, 0.0, 0.02, 0.04, 1.0))
+names(corr.returns) = c("today.returns", "prev.returns")
+corr.returns[c(1:10, ndays-10:ndays),]
 
-table(day.returns$prev_bin, day.returns$daily_bin)
+cor(corr.returns)
+
+corr.returns$today_bins=cut(corr.returns$today.returns, breaks = c(-1.0,-0.04,-0.02, -0.01, 0.0, 0.01, 0.02, 0.04, 1.0))
+corr.returns$prev_bins =cut(corr.returns$prev.returns, breaks = c(-1.0,-0.04,-0.02, -0.01, 0.0, 0.01, 0.02, 0.04, 1.0))
+
+freq_table = table(corr.returns$prev_bins, corr.returns$today_bins)
+
+print(freq_table)
+sum(freq_table)
+cond_prob = freq_table/colSums(freq_table)
+print(round(cond_prob,2))
+
+        
+
 
