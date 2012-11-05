@@ -1,5 +1,7 @@
 ## spy data processing
 
+library("quantmod"
+        
 getSymbols("SPY",src="yahoo")
 barChart(SPY)
 
