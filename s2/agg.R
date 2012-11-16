@@ -1,6 +1,6 @@
-## agg data processing
+## iShares Barclays Aggregate Bond
 
-library("quantmod"
+library("quantmod")
         
 getSymbols("AGG",src="yahoo")
 barChart(AGG)
