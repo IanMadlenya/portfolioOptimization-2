@@ -4,7 +4,7 @@ library("quantmod")
 getSymbols("EEM",src="yahoo")
 barChart(EEM)
 
-eem.returns = periodReturn(EEM,period='daily')
+eem.returns = periodReturn(EEM,period='weekly')
 ndays = dim(eem.returns)[1]
 
 today.returns = eem.returns
@@ -36,5 +36,3 @@ cond_prob = cond_prob/colSums(cond_prob)
 
 print(round(cond_prob,2))
 
-
-  

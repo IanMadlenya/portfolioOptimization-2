@@ -1,17 +1,18 @@
-## MSCI Emerging  Market Index 
+## spy data processing
 
 library("quantmod")
-getSymbols("EEM",src="yahoo")
-barChart(EEM)
+        
+getSymbols("SPY",src="yahoo")
+barChart(SPY)
 
-eem.returns = periodReturn(EEM,period='daily')
-ndays = dim(eem.returns)[1]
+spy.returns = periodReturn(SPY,period='weekly')
+ndays = dim(spy.returns)[1]
 
-today.returns = eem.returns
+today.returns = spy.returns
 today.returns[1,] = NA
 today.returns = subset(today.returns, !is.na(today.returns))
 
-prev.returns = eem.returns
+prev.returns = spy.returns
 prev.returns[ndays,] = NA
 prev.returns = subset(prev.returns, !is.na(prev.returns))
 
@@ -19,6 +20,7 @@ corr.returns = data.frame(today.returns)
 corr.returns$prev.returns = prev.returns
 
 names(corr.returns) = c("today.returns", "prev.returns")
+corr.returns[c(1:10, 1460:1469),]
 
 cor(corr.returns)
 
@@ -37,4 +39,4 @@ cond_prob = cond_prob/colSums(cond_prob)
 print(round(cond_prob,2))
 
 
-  
+
